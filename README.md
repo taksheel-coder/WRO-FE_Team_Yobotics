@@ -81,7 +81,7 @@ Ayush Kothari – ayushkothari2007@gmail.com
 
 Taksheel Subudhi – taksheelsubudhi@gmail.com
 
-Aneesh Vijay
+Aneesh Vijay - aneeshvijay41@gmail.com
 
 
 
