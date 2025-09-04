@@ -41,8 +41,8 @@ YoBotics is an autonomous vehicle designed for the WRO Future Engineers 2025 com
             |                          |                          |
    +----------------+        +-----------------+        +-----------------+
    |   Motors &     |        |     Sensors     |        |     Camera      |
-   |   Servos       |        | (Ultrasonic,    |        |  (Logitech USB) |
-   | (BO, MG996R)   |        |  Colour, IMU)   |        +-----------------+
+   |   Servos       |        |     (IMU )      |        |  (Logitech USB) |
+   | (BO, MG996R)   |        |                 |        +-----------------+
    +----------------+        +-----------------+
 ```
 
@@ -162,7 +162,7 @@ Team Name: YoBotics
                                  |                         |
                     [Center on Block & Slow Down]   [Check Side Walls]
                                  |                         |
-                    [Move to Set Distance]         [Side Wall?]--Yes-->[Sharp Turn Opposite]
+                    [Move to Set Distance]         [Side Wall?]--Yes-->[Turn Opposite]
                                  |                         |         |
                     [Turn as per Block Color]      No      |         v
                                  |                [Weave to Find Path]
