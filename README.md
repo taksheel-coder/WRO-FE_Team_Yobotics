@@ -1,215 +1,205 @@
-Future Engineers 2025 – YoBotics
-
-
+# Future Engineers 2025 – YoBotics
 
 **Table of Contents**
+- Overview
+- System Architecture
+- Repository Structure
+- Team Members
+- Hardware & Components
+- Mobility & Power System
+- Sensors & Vision
+- Software Overview
+- Setup & Initialization
+- Object Detection & Navigation
+- Driving Strategies & Challenge Logic
+- Testing & Calibration
+- Results & Performance
+- Troubleshooting Guide
+- Assembly Instructions
+- Potential Improvements
+- License / Acknowledgements
 
+---
 
--Overview
+## Overview
 
--Repository Structure
+YoBotics is an autonomous vehicle engineered for the WRO Future Engineers 2025 competition, designed to tackle both the Open and Obstacle Challenges. The bot demonstrates advanced navigation, wall-following, and obstacle avoidance using modular hardware and software.
 
--Team Members
+---
 
--Hardware/Components
+## System Architecture
 
--Mobility System
+![System Architecture Diagram](insert_diagram_here)
 
--Power & Sensors
+The robot integrates a Raspberry Pi for centralized control, a Logitech camera for vision, and a dual power system. All sensors and actuators are connected through a custom wiring harness, enabling robust data flow and control.
 
--Software
+---
 
--Setup & Initialization
+## Repository Structure
 
--Object Detection & Navigation
+| Directory         | Description                                 |
+|-------------------|---------------------------------------------|
+| Arduino_Files     | Arduino test files and references           |
+| Schematics        | Wiring diagrams and electronic layouts       |
+| Team Photos       | Team member photos                          |
+| Vehicle Photos    | Robot builds and prototypes                 |
+| Video             | Demo and challenge run videos               |
+| cad               | 3D CAD models for chassis and components    |
+| src               | Raspberry Pi controller source code         |
+| docs              | Detailed guides and troubleshooting         |
 
--Driving Strategies & Challenge Logic
+---
 
--Assembly Instructions
+## Team Members
 
--Potential Improvements
+Team Name: YoBotics  
+- Ayush Kothari – ayushkothari2007@gmail.com  
+- Taksheel Subudhi – taksheelsubudhi@gmail.com  
+- Aneesh Vijay – aneeshvijay41@gmail.com  
 
--License / Acknowledgements
+---
 
+## Hardware & Components
 
+| Component         | Description                                                                 | Notes                                         |
+|-------------------|-----------------------------------------------------------------------------|-----------------------------------------------|
+| Chassis           | Custom 3D printed frame                                                     | Optimized for turning radius and weight       |
+| DC Motor          | 100 RPM Dual Shaft BO Motor (Rear drive)                                    | Stable rear-wheel drive                       |
+| Steering Servo    | MG996R high-torque servo (Ackerman steering)                                | Precise front-wheel steering                  |
+| Raspberry Pi      | Main processing unit                                                        | Runs navigation & control                     |
+| Logitech Camera   | 92mm focal length                                                           | Colour and obstacle detection                 |
+| Ultrasonic Sensor | Distance measurement                                                        | Wall following and alignment                  |
+| Colour Sensor     | Line and turn detection                                                     | Decision-making for turns                     |
+| MPU6050 IMU       | Orientation and lap tracking                                                | Accurate lap count and stable turns           |
+| Bonka LiPo Battery| 12V, powers motors and electronics                                          | High-capacity for extended runs               |
+| Mi Power Bank     | 10,000mAh, powers Raspberry Pi                                              | Isolated Pi power for reliability             |
+| Misc.             | 3D-printed mounts, wiring                                                   | Vibration dampening and cable management      |
 
-**Overview**
+---
 
-This project is an autonomous vehicle designed for the WRO Future Engineers 2025 competition, built to complete both the Open Challenge and the Obstacle Challenge.
+## Mobility & Power System
 
-It serves as both a competition-ready bot and a reference platform for exploring navigation strategies, wall-following logic, and obstacle detection.
+- **Drive:** Rear-wheel drive via dual shaft BO motor
+- **Steering:** Ackerman geometry using MG996R servo
+- **Power:** 12V Bonka LiPo battery for motors, Mi 10,000mAh power bank for Raspberry Pi
 
+---
 
+## Sensors & Vision
 
-**Key features:**
+- **Camera:** Logitech USB camera, 92mm focal length, mounted for wide-angle vision
+- **Ultrasonic Sensor:** For wall detection and distance measurement
+- **Colour Sensor:** Detects line colour for navigation and turns
+- **IMU (MPU6050):** Tracks orientation and lap count
 
-Front-wheel steering and rear-wheel drive design for realistic vehicle dynamics
+---
 
-Raspberry Pi as the main processing unit for navigation and control
+## Software Overview
 
-Wide-angle camera for colour-based detection and obstacle recognition
+- Modular Python scripts for navigation, sensor fusion, and challenge logic
+- Source code organized in `/src` folder
+- OpenCV for vision processing
+- Easy configuration for new strategies
 
-Ultrasonic sensor for precise distance measurement and wall following
+---
 
-IMU-based orientation tracking for accurate lap counting and stable turns
+## Setup & Initialization
 
-Modular software for quick adaptation to new strategies
+1. Install Raspberry Pi OS and required dependencies
+2. Connect all sensors and actuators as per schematics
+3. Calibrate motors, servo, and sensors using test scripts
+4. Configure camera settings for optimal colour detection
 
+---
 
+## Object Detection & Navigation
 
-**Repository Structure**
+- The object detection system is primarily camera-based. The Logitech camera processes images using OpenCV, applying a broad HSV color range to identify blocks, but combines this with strict shape analysis to avoid false positives.
+- For wall detection, a dedicated HSV mask isolates the wall’s color signature, ensuring only the wall is detected in the field of view.
+- Accurate distance measurement is achieved by leveraging the camera’s 92mm focal length and mathematical calculations with NumPy, allowing the robot to estimate the position of objects and walls for precise navigation.
 
-| Directory      | Description                           |
-|----------------|---------------------------------------|
-| Arduino_Files  | Arduino-related test files and references |
-| Schematics     | Wiring diagrams and electronic layouts |
-| Team Photos    | Reserved for team member photos        |
-| Vehicle Photos | Images of robot builds and prototypes  |
-| Video          | Demo and challenge run videos          |
-| cad            | 3D CAD models for chassis and components |
-| src            | Source code for the Raspberry Pi controller |
+---
+## Driving Strategies & Challenge Logic
+## Driving Strategies & Challenge Logic
 
+- **No Obstacle Round:**  
+  In rounds without obstacles, the robot relies primarily on its camera for navigation. The motors are set to run at a steady, constant speed, allowing the bot to move forward smoothly. The navigation algorithm uses a Region of Interest (ROI) within the camera feed to continuously scan for walls.  
+  - If a wall is detected directly ahead, the bot evaluates the presence of walls on either side. If a side wall is detected, it immediately executes a sharp turn away from that wall using a predefined steering value, ensuring a quick and decisive maneuver to avoid collision.
+  - If only a front wall is detected and there are no side walls, the bot initiates a weaving motion—alternately steering left and right—to explore potential open paths and avoid getting stuck.
+  - This wall-sensing and avoidance logic is repeated throughout the round, allowing the robot to dynamically adapt to changes in wall distance, orientation, and track layout. The approach ensures continuous forward movement while maintaining a safe distance from all obstacles.
 
+- **Obstacle Round:**  
+  When the robot encounters an obstacle (such as a block), it uses its camera to center itself precisely with respect to the obstacle, ensuring accurate alignment. The robot then continues to move forward until it reaches a predetermined distance from the obstacle, calculated using camera data and onboard algorithms.  
+  - At this point, the robot determines the direction it needs to turn based on the detected color of the block, allowing for color-based decision making and challenge compliance.
+  - After successfully navigating past the obstacle, the robot seamlessly transitions back to the no obstacle navigation logic, resuming its forward movement and wall detection routines.
+  - To enhance precision and safety during obstacle negotiation, the robot automatically reduces its speed to 60% of its normal value when a block is detected. This speed reduction allows for more controlled and accurate maneuvers, minimizing the risk of errors or collisions while passing obstacles.
+---
 
-**Team Members**
+## Testing & Calibration
 
-Team Name: YoBotics
+- Step-by-step guides for calibrating each subsystem
+- Example scripts and troubleshooting tips in `/docs`
+- Photos and videos of test runs included in `/Video` and `/Vehicle Photos`
 
-Members:
+---
 
-Ayush Kothari – ayushkothari2007@gmail.com
+## Results & Performance
 
-Taksheel Subudhi – taksheelsubudhi@gmail.com
+| Test            | Result               |
+|-----------------|---------------------|
+| Lap Time        | 00:XX (sample)      |
+| Detection Accuracy | XX% (sample)     |
+| Power Runtime   | XX minutes (sample) |
 
-Aneesh Vijay - aneeshvijay41@gmail.com
+Videos and images available in the repository.
 
+---
 
+## Troubleshooting Guide
 
-**Hardware/Components**
+- Common issues and solutions for sensors, motors, and software
+- FAQ for setup and calibration
 
-| Component         | Description                 | Notes |
-|-------------------|-----------------------------|-------|
-| Chassis           | Custom 3D printed frame     | Optimized for turning radius, weight distribution, and colour detection |
-| DC Motor          | 100 RPM Dual Shaft BO Motor | Rear-wheel drive |
-| Motor Driver      | L298N                       | Connected to Raspberry Pi |
-| Steering Servo    | MG996R high-torque servo    | Front-wheel steering |
-| Raspberry Pi      | Main processing unit        | Runs navigation & control |
-| Wide-Angle Camera | Vision input                | For colour and obstacle detection |
-| Ultrasonic Sensor | Distance measurement        | For wall detection |
-| Colour Sensor     | Line and turn detection     | Used in decision-making |
-| MPU6050           | IMU                         | Provides orientation data |
-| Battery           | 3.7V 2000mAh 18650 Li-Ion   | Powers electronics & motors |
-| Misc.             | 3D-printed mounts, wiring   | — |
+---
 
+## Assembly Instructions
 
+1. Mount DC motor and servo securely on chassis
+2. Install Raspberry Pi on vibration-dampened mounts
+3. Wire battery, motor driver, and camera
+4. Run test scripts before full challenge runs
 
-**Mobility System**
+---
+## Potential Improvements
 
-Configuration: Front-wheel steering with single dual-shaft BO motor for rear drive
+- **Enhance Detection Algorithms for Reliability:**  
+  Refine the computer vision pipeline to minimize false positives and false negatives in both block and wall detection. Consider implementing adaptive thresholding, advanced contour filtering, or even lightweight machine learning models to improve detection accuracy under varying lighting and field conditions.
 
-Turning Radius: Optimized for narrow track corners
+- **Refine Sensor Calibration and Camera Angle:**  
+  Develop systematic calibration routines for the color sensor, camera, and IMU. Document the optimal mounting angles and positions for all sensors, and include procedures to repeat calibration before each competition run to ensure consistent performance.
 
-Control: PWM-based motor speed control, servo-based steering
+- **Explore Reinforcement Learning for Adaptive Navigation:**  
+  Investigate the use of reinforcement learning algorithms to enable the robot to adapt its navigation strategy based on real-time feedback. By training the bot in simulation or controlled environments, it could learn to optimize wall-following, turning, and obstacle avoidance dynamically.
 
-Reasoning: Car-like steering dynamics with stability for WRO challenge field
+- **Integrate Data Logging and Analysis:**  
+  Implement onboard data logging for sensor readings and decision events. Analyzing this data post-run can help identify bottlenecks, unexpected behaviors, and areas for further optimization.
 
+- **Improve Power Management:**  
+  Explore advanced power regulation modules to ensure stable voltage supply, especially when motors and processing units are under heavy load, to prevent unexpected resets or lags.
 
+- **Expand Documentation and User Guides:**  
+  Add detailed assembly guides, troubleshooting flowcharts, and a comprehensive FAQ section. Include video tutorials and annotated wiring diagrams to make it easier for new users or team members to understand and replicate the build.
+---
 
-**Power & Sensors**
+## License / Acknowledgements
 
-Power: 3.7V 2000mAh 18650 Li-Ion battery
-
-
-Sensors:
-
-Ultrasonic + Colour Sensor: Wall following & turn detection
-
-MPU6050 IMU: Orientation & lap tracking
-
-Camera: Obstacle and colour detection
-
-
-
-**Software**
-
-
-**Setup & Initialization**
-
-Raspberry Pi
-
-Install Raspberry Pi OS
-
-Install dependencies as required
-
-
-
-**Motor & Sensor Setup**
-
-Use /src/ files on Raspberry Pi
-
-Run test scripts to verify motor, servo, and sensor calibration
-
-
-
-**Object Detection & Navigation**
-
-Ultrasonic logic for wall detection and alignment
-
-Colour sensor detects line colour for turn direction
-
-Camera detects obstacles via colour recognition
-
-Fusion of IMU and servo angle ensures accurate turning
-
-
-
-**Driving Strategies & Challenge Logic**
-
-Wall Following: Ultrasonic + colour sensor feedback
-
-Turns: Servo steering with colour sensor detection
-
-Obstacle Avoidance: Camera-based rerouting with servo control
-
-Lap Counting: IMU orientation and angle tracking
-
-Recovery: Re-alignment using ultrasonic + camera data
-
-
-
-**Assembly Instructions**
-
-Mount DC motor and servo securely on chassis
-
-Calibrate servo steering angles
-
-Install Raspberry Pi on vibration-dampened mounts
-
-Wire battery, motor driver, sensors, and camera carefully
-
-Run test scripts for motors, servo, and sensors before full runs
-
-
-
-**Potential Improvements**
-
-Improve reliability of detection algorithms
-
-Refine calibration of colour sensor and camera angle
-
-Explore reinforcement learning for adaptive navigation
-
-
-
-**License / Acknowledgements**
-
-This project is licensed under the MIT License.
+Project licensed under MIT License.
 
 Special thanks to:
+- OpenCV (computer vision)
+- Raspberry Pi Foundation (SBC platform)
+- WRO community and participating teams
 
-OpenCV – Computer vision processing
+---
 
-Raspberry Pi Foundation – SBC platform
-
-WRO community and participating teams for continuous inspiration
-
+For more details, see `/docs` and example videos in `/Video`.
