@@ -252,7 +252,9 @@ The robot calculates the distance to the obstacle using the camera’s 92mm foca
 
 All engineering decisions and system designs are thoroughly documented for clarity and reproducibility. CAD models, wiring diagrams, and electronic schematics are provided in the repository. The README and ‎`/docs` folder offer in-depth descriptions of each subsystem, camera calibration procedures, and troubleshooting guides.
 
-Software modules are organized by function—navigation, vision, and control logic—with all critical parameters exposed for tuning. Flowcharts and block diagrams illustrate the architecture and decision processes, making it easy for judges and new contributors to understand and evaluate the engineering work. The project emphasizes modularity, reliability, and transparency, ensuring every component and algorithm can be traced, tested, and improved.
+
+**Software modules are organized by function—navigation, vision, and control logic—with all critical parameters exposed for tuning. Flowcharts and block diagrams illustrate the architecture and decision processes, making it easy for judges and new contributors to understand and evaluate the engineering work. The project emphasizes modularity, reliability, and transparency, ensuring every component and algorithm can be traced, tested, and improved.**
+
 ---
 
 ## License / Acknowledgements
